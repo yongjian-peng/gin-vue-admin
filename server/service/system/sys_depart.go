@@ -1,9 +1,12 @@
 package system
 
 import (
+	"errors"
+
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
+	"gorm.io/gorm"
 )
 
 //@author: [piexlmax](https://github.com/piexlmax)
@@ -13,6 +16,14 @@ import (
 //@return: err error, userInter model.SysUser
 
 type DepartService struct{}
+
+func (departService *DepartService) CreateDepart(depart system.SysDepart) (err error) {
+	var sysDepart system.SysDepart
+	if !errors.Is(global.GVA_DB.Where("company_name = ?", depart.CompanyName).First(&sysDepart).Error, gorm.ErrRecordNotFound) {
+		return errors.New("存在相同的代理名称")
+	}
+	return global.GVA_DB.Create(&depart).Error
+}
 
 //@author: [piexlmax](https://github.com/piexlmax)
 //@function: GetUserInfoList

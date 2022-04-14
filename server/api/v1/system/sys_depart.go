@@ -4,6 +4,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	"github.com/flipped-aurora/gin-vue-admin/server/utils"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +20,18 @@ type DepartApi struct{}
 // @Success 200 {object} response.Response{data=systemRes.LoginResponse,msg=string} "返回包括用户信息,token,过期时间"
 // @Router /base/login [post]
 func (d *DepartApi) CreateDepart(c *gin.Context) {
-	response.Ok(c)
+	var depart system.SysDepart
+	_ = c.ShouldBindJSON(&depart)
+	if err := utils.Verify(depart, utils.DepartVerify); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if err := departService.CreateDepart(depart); err != nil {
+		global.GVA_LOG.Error("创建失败", zap.Error(err))
+		response.FailWithMessage("创建失败！", c)
+	} else {
+		response.OkWithMessage("创建成功", c)
+	}
 }
 
 // @Tags SysUser
