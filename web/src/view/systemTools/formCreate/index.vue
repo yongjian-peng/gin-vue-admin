@@ -12,6 +12,9 @@ export default {
 
 <script setup>
 import { ref } from 'vue'
-const basePath = ref(import.meta.env.VITE_BASE_PATH)
-const basePort = ref(import.meta.env.VITE_SERVER_PORT)
+// const basePath = ref(import.meta.env.VITE_BASE_PATH)
+// const basePort = ref(import.meta.env.VITE_SERVER_PORT)
+
+const basePath = ref("http://localhost")
+const basePort = ref("8888")
 </script>

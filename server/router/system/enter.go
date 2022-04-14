@@ -8,6 +8,7 @@ type RouterGroup struct {
 	InitRouter
 	MenuRouter
 	UserRouter
+	DepartRouter
 	CasbinRouter
 	AutoCodeRouter
 	AuthorityRouter

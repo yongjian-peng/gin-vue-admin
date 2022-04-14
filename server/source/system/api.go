@@ -2,6 +2,7 @@ package system
 
 import (
 	"context"
+
 	sysModel "github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	"github.com/flipped-aurora/gin-vue-admin/server/service/system"
 	"github.com/pkg/errors"
@@ -57,6 +58,8 @@ func (i *initApi) InitializeData(ctx context.Context) (context.Context, error) {
 		{ApiGroup: "系统用户", Method: "POST", Path: "/user/changePassword", Description: "修改密码（建议选择)"},
 		{ApiGroup: "系统用户", Method: "POST", Path: "/user/setUserAuthority", Description: "修改用户角色(必选)"},
 		{ApiGroup: "系统用户", Method: "POST", Path: "/user/resetPassword", Description: "重置用户密码"},
+
+		{ApiGroup: "系统代理", Method: "POST", Path: "/depart/getDepartList", Description: "获取代理列表"},
 
 		{ApiGroup: "api", Method: "POST", Path: "/api/createApi", Description: "创建api"},
 		{ApiGroup: "api", Method: "POST", Path: "/api/deleteApi", Description: "删除Api"},

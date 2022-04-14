@@ -6,6 +6,7 @@ type ApiGroup struct {
 	DBApi
 	JwtApi
 	BaseApi
+	DepartApi
 	SystemApi
 	CasbinApi
 	AutoCodeApi
@@ -24,6 +25,7 @@ var (
 	jwtService              = service.ServiceGroupApp.SystemServiceGroup.JwtService
 	menuService             = service.ServiceGroupApp.SystemServiceGroup.MenuService
 	userService             = service.ServiceGroupApp.SystemServiceGroup.UserService
+	departService           = service.ServiceGroupApp.SystemServiceGroup.DepartService
 	initDBService           = service.ServiceGroupApp.SystemServiceGroup.InitDBService
 	casbinService           = service.ServiceGroupApp.SystemServiceGroup.CasbinService
 	autoCodeService         = service.ServiceGroupApp.SystemServiceGroup.AutoCodeService
