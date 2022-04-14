@@ -81,10 +81,10 @@ hua-wei-obs:
   access-key: you-access-key
   secret-key: you-secret-key
 jwt:
-  buffer-time: 86400
-  expires-time: 604800
-  issuer: qmPlus
   signing-key: ccc67fe9-7992-440a-b7b7-596d958b2bbd
+  expires-time: 604800
+  buffer-time: 86400
+  issuer: qmPlus
 local:
   path: uploads/file
 mysql:

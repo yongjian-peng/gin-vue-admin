@@ -61,7 +61,6 @@ func (d *DepartApi) GetDepartList(c *gin.Context) {
 			PageSize: pageInfo.PageSize,
 		}, "获取成功", c)
 	}
-	response.Ok(c)
 }
 
 // @Tags SysUser

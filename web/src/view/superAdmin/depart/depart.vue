@@ -52,23 +52,29 @@
         row-key="ID"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column align="left" label="日期" width="180">
+        <el-table-column
+          align="left"
+          label="代理编号"
+          prop="ID"
+          width="160"
+        />
+        <el-table-column align="left" label="创建时间" width="180">
           <template #default="scope">{{
-            formatDate(scope.row.CreatedAt)
+            unixTime(scope.row.createTime)
           }}</template>
         </el-table-column>
 
         <el-table-column
           align="left"
-          label="字典名（中）"
-          prop="name"
+          label="代理名称"
+          prop="companyName"
           width="160"
         />
 
         <el-table-column
           align="left"
-          label="字典名（英）"
-          prop="type"
+          label="代理邮箱"
+          prop="companyEmail"
           width="120"
         />
 
@@ -77,8 +83,6 @@
             formatBoolean(scope.row.status)
           }}</template>
         </el-table-column>
-
-        <el-table-column align="left" label="描述" prop="desc" width="280" />
 
         <el-table-column align="left" label="按钮组">
           <template #default="scope">
@@ -210,11 +214,16 @@ import {
   findSysDictionary,
   getSysDictionaryList,
 } from '@/api/sysDictionary' //  此处请自行替换地址
+
+import {
+  getDepartList,
+} from '@/api/depart'
+
 import warningBar from '@/components/warningBar/warningBar.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { formatBoolean, formatDate } from '@/utils/format'
+import { formatBoolean, formatDate, unixTime } from '@/utils/format'
 
 const router = useRouter()
 
@@ -281,7 +290,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async() => {
-  const table = await getSysDictionaryList({
+  const table = await getDepartList({
     page: page.value,
     pageSize: pageSize.value,
     ...searchInfo.value,

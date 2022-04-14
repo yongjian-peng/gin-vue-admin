@@ -17,6 +17,25 @@ export const formatDate = (time) => {
   }
 }
 
+export const unixTime = (timeunix) => {
+  const time = new Date(parseInt(timeunix) * 1000);
+  const y = time.getFullYear();
+  const m = time.getMonth() + 1;//getMonth获取的月份为（0--11），实际月份需要+1得出
+  const d = time.getDate();
+  const h = time.getHours();
+  const mm = time.getMinutes();
+  const s = time.getSeconds();
+  const realtime = y+'-'+addZero(m)+'-'+addZero(d) +' ' +addZero(h) + ':' + addZero(mm) + ':' + addZero(s);
+  return realtime;
+}
+
+/**
+ * 添加0值
+ */
+export const addZero = (m) => {
+  return m < 10 ? '0' + m : m;
+}
+
 export const filterDict = (value, options) => {
   const rowLabel = options && options.filter(item => item.value === value)
   return rowLabel && rowLabel[0] && rowLabel[0].label
