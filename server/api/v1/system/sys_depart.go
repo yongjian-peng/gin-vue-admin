@@ -13,12 +13,12 @@ import (
 
 type DepartApi struct{}
 
-// @Tags Base
-// @Summary 用户登录
+// @Tags SysDepart
+// @Summary 创建代理
 // @Produce  application/json
-// @Param data body systemReq.Login true "用户名, 密码, 验证码"
-// @Success 200 {object} response.Response{data=systemRes.LoginResponse,msg=string} "返回包括用户信息,token,过期时间"
-// @Router /base/login [post]
+// @Param data body systemReq.Login true "代理名称，代理邮箱"
+// @Success 200
+// @Router /depart/createDepart [post]
 func (d *DepartApi) CreateDepart(c *gin.Context) {
 	var depart system.SysDepart
 	_ = c.ShouldBindJSON(&depart)
@@ -34,26 +34,33 @@ func (d *DepartApi) CreateDepart(c *gin.Context) {
 	}
 }
 
-// @Tags SysUser
+// @Tags SysDepart
 // @Summary 设置用户信息
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body system.SysUser true "ID, 用户名, 昵称, 头像链接"
-// @Success 200 {object} response.Response{data=map[string]interface{},msg=string} "设置用户信息"
-// @Router /user/setUserInfo [put]
+// @Param data body system.SysDepart true "ID, 代理名称，代理邮箱"
+// @Success 200
+// @Router /depart/getDeartInfo [put]
 func (d *DepartApi) UpdateDepart(c *gin.Context) {
-	response.Ok(c)
+	var sysDepart system.SysDepart
+	_ = c.ShouldBindJSON(&sysDepart)
+	if err := departService.UpdateDepart(&sysDepart); err != nil {
+		global.GVA_LOG.Error("更新代理失败！", zap.Error(err))
+		response.FailWithMessage("更新代理失败", c)
+	} else {
+		response.OkWithMessage("更新成功", c)
+	}
 }
 
-// @Tags SysUser
+// @Tags SysDepart
 // @Summary 分页获取用户列表
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
 // @Param data body request.PageInfo true "页码, 每页大小"
 // @Success 200 {object} response.Response{data=response.PageResult,msg=string} "分页获取用户列表,返回包括列表,总数,页码,每页数量"
-// @Router /user/getUserList [post]
+// @Router /depart/getDepartList [post]
 func (d *DepartApi) GetDepartList(c *gin.Context) {
 	var pageInfo request.PageInfo
 	_ = c.ShouldBindJSON(&pageInfo)
@@ -75,25 +82,40 @@ func (d *DepartApi) GetDepartList(c *gin.Context) {
 	}
 }
 
-// @Tags SysUser
-// @Summary 删除用户
+// @Tags SysDepart
+// @Summary 删除代理
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Param data body request.GetById true "用户ID"
+// @Param data body request.GetById true "代理ID"
 // @Success 200 {object} response.Response{msg=string} "删除用户"
-// @Router /user/deleteUser [delete]
+// @Router /depart/deleteDepart [delete]
 func (d *DepartApi) DeleteDepart(c *gin.Context) {
-	response.Ok(c)
+	var sysDepart system.SysDepart
+	_ = c.ShouldBindJSON(&sysDepart)
+	if err := departService.DeleteDepart(sysDepart); err != nil {
+		global.GVA_LOG.Error("删除代理失败！", zap.Error(err))
+		response.FailWithMessage("删除代理失败！", c)
+	} else {
+		response.OkWithMessage("删除代理成功！", c)
+	}
 }
 
-// @Tags SysUser
-// @Summary 获取用户信息
+// @Tags SysDepart
+// @Summary 获取代理信息
 // @Security ApiKeyAuth
 // @accept application/json
 // @Produce application/json
-// @Success 200 {object} response.Response{data=map[string]interface{},msg=string} "获取用户信息"
-// @Router /user/getUserInfo [get]
+// @Success 200 {object} response.Response{data=map[string]interface{},msg=string} "获取代理信息"
+// @Router /depart/getDepartInfo [get]
 func (d *DepartApi) GetDepartInfo(c *gin.Context) {
-	response.Ok(c)
+
+	var depart system.SysDepart
+	_ = c.ShouldBindQuery(&depart)
+	if err, sysDepart := departService.GetDepartInfo(depart.ID); err != nil {
+		global.GVA_LOG.Error("查询失败！", zap.Error(err))
+		response.FailWithMessage("查询代理失败", c)
+	} else {
+		response.OkWithDetailed(gin.H{"depart": sysDepart}, "查询成功", c)
+	}
 }

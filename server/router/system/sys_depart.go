@@ -9,12 +9,12 @@ import (
 type DepartRouter struct{}
 
 func (s *DepartRouter) InitDepartRouter(Router *gin.RouterGroup) {
-	departRouter := Router.Group("depart")
-	departRouterWithoutRecord := Router.Group("depart").Use(middleware.OperationRecord())
+	departRouter := Router.Group("depart").Use(middleware.OperationRecord())
+	departRouterWithoutRecord := Router.Group("depart")
 	departApi := v1.ApiGroupApp.SystemApiGroup.DepartApi
 	{
 		departRouter.POST("createDepart", departApi.CreateDepart)   // 管理员注册账号
-		departRouter.POST("updateDepart", departApi.UpdateDepart)   // 用户修改密码
+		departRouter.PUT("updateDepart", departApi.UpdateDepart)    // 用户修改密码
 		departRouter.DELETE("deleteDepart", departApi.DeleteDepart) // 删除用户
 	}
 	{
