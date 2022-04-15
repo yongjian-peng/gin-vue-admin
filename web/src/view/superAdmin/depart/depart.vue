@@ -5,10 +5,10 @@
     />
     <div class="gva-search-box">
       <el-form :inline="true" :model="searchInfo">
-        <el-form-item label="字典名（中）">
-          <el-input v-model="searchInfo.name" placeholder="搜索条件" />
+        <el-form-item label="代理名称">
+          <el-input v-model="searchInfo.companyName" placeholder="搜索条件" />
         </el-form-item>
-        <el-form-item label="字典名（英）">
+        <!-- <el-form-item label="字典名（英）">
           <el-input v-model="searchInfo.type" placeholder="搜索条件" />
         </el-form-item>
         <el-form-item label="状态" prop="status">
@@ -19,7 +19,7 @@
         </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="searchInfo.desc" placeholder="搜索条件" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button
             size="small"
@@ -88,12 +88,6 @@
           <template #default="scope">
             <el-button
               size="small"
-              icon="document"
-              type="text"
-              @click="toDetile(scope.row)"
-            >详情</el-button>
-            <el-button
-              size="small"
               icon="edit"
               type="text"
               @click="updateSysDictionaryFunc(scope.row)"
@@ -154,36 +148,29 @@
         size="medium"
         label-width="110px"
       >
-        <el-form-item label="字典名（中）" prop="name">
+        <el-form-item label="代理名称" prop="companyName">
           <el-input
-            v-model="formData.name"
-            placeholder="请输入字典名（中）"
+            v-model="formData.companyName"
+            placeholder="请输入代理名称"
             clearable
             :style="{ width: '100%' }"
           />
         </el-form-item>
-        <el-form-item label="字典名（英）" prop="type">
+        <el-form-item label="代理邮箱" prop="companyEmail">
           <el-input
-            v-model="formData.type"
-            placeholder="请输入字典名（英）"
+            v-model="formData.companyEmail"
+            placeholder="请输入代理邮箱"
             clearable
             :style="{ width: '100%' }"
           />
         </el-form-item>
-        <el-form-item label="状态" prop="status" required>
-          <el-switch
-            v-model="formData.status"
-            active-text="开启"
-            inactive-text="停用"
-          />
+        <el-form-item label="状态" prop="status">
+          <el-radio v-model="formData.status" label='1'>开启</el-radio>
+          <el-radio v-model="formData.status" label='0'>停用</el-radio>
         </el-form-item>
-        <el-form-item label="描述" prop="desc">
-          <el-input
-            v-model="formData.desc"
-            placeholder="请输入描述"
-            clearable
-            :style="{ width: '100%' }"
-          />
+        <el-form-item label="类型" prop="type">
+          <el-radio v-model="formData.type" label="1">企业方</el-radio>
+          <el-radio v-model="formData.type" label="2">审核方</el-radio>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -216,6 +203,10 @@ import {
 } from '@/api/sysDictionary' //  此处请自行替换地址
 
 import {
+  createDepart,
+  deleteDepart,
+  updateDepart,
+  getDepartInfo,
   getDepartList,
 } from '@/api/depart'
 
@@ -228,33 +219,26 @@ import { formatBoolean, formatDate, unixTime } from '@/utils/format'
 const router = useRouter()
 
 const formData = ref({
-  name: null,
-  type: null,
-  status: true,
-  desc: null,
+  companyName: '',
+  type: '',
+  status: '',
+  companyEmail: '',
 })
 const rules = ref({
-  name: [
+  companyName: [
     {
       required: true,
-      message: '请输入字典名（中）',
+      message: '请输入代理名称',
       trigger: 'blur',
     },
   ],
-  type: [
+  companyEmail: [
     {
       required: true,
-      message: '请输入字典名（英）',
+      message: '请输入代理邮箱',
       trigger: 'blur',
     },
-  ],
-  desc: [
-    {
-      required: true,
-      message: '请输入描述',
-      trigger: 'blur',
-    },
-  ],
+  ]
 })
 
 const page = ref(1)
@@ -305,37 +289,28 @@ const getTableData = async() => {
 
 getTableData()
 
-const toDetile = (row) => {
-  router.push({
-    name: 'dictionaryDetail',
-    params: {
-      id: row.ID,
-    },
-  })
-}
-
 const dialogFormVisible = ref(false)
 const type = ref('')
 const updateSysDictionaryFunc = async(row) => {
-  const res = await findSysDictionary({ ID: row.ID })
+  const res = await getDepartInfo({ ID: row.ID })
   type.value = 'update'
   if (res.code === 0) {
-    formData.value = res.data.resysDictionary
+    formData.value = res.data.depart
     dialogFormVisible.value = true
   }
 }
 const closeDialog = () => {
   dialogFormVisible.value = false
   formData.value = {
-    name: null,
-    type: null,
-    status: true,
-    desc: null,
+    companyName: '',
+    type: '',
+    status: '',
+    companyEmail: '',
   }
 }
 const deleteSysDictionaryFunc = async(row) => {
   row.visible = false
-  const res = await deleteSysDictionary({ ID: row.ID })
+  const res = await deleteDepart({ ID: row.ID })
   if (res.code === 0) {
     ElMessage({
       type: 'success',
@@ -355,13 +330,13 @@ const enterDialog = async() => {
     let res
     switch (type.value) {
       case 'create':
-        res = await createSysDictionary(formData.value)
+        res = await createDepart(formData.value)
         break
       case 'update':
-        res = await updateSysDictionary(formData.value)
+        res = await updateDepart(formData.value)
         break
       default:
-        res = await createSysDictionary(formData.value)
+        res = await createDepart(formData.value)
         break
     }
     if (res.code === 0) {

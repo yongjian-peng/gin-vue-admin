@@ -2,10 +2,11 @@ package system
 
 import (
 	"errors"
+	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
-	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
+	systemReq "github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
 	"gorm.io/gorm"
 )
 
@@ -22,6 +23,8 @@ func (departService *DepartService) CreateDepart(depart system.SysDepart) (err e
 	if !errors.Is(global.GVA_DB.Where("company_name = ?", depart.CompanyName).First(&sysDepart).Error, gorm.ErrRecordNotFound) {
 		return errors.New("存在相同的代理名称")
 	}
+	depart.CreateTime = time.Now().Unix()
+	depart.UpdateTime = time.Now().Unix()
 	return global.GVA_DB.Create(&depart).Error
 }
 
@@ -31,16 +34,21 @@ func (departService *DepartService) CreateDepart(depart system.SysDepart) (err e
 //@param: info request.PageInfo
 //@return: err error, list interface{}, total int64
 
-func (departService *DepartService) GetDepartInfoList(info request.PageInfo) (err error, list interface{}, total int64) {
+func (departService *DepartService) GetDepartInfoList(info systemReq.SearchDepartParams) (err error, list interface{}, total int64) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := global.GVA_DB.Model(&system.SysDepart{})
 	var departList []system.SysDepart
+
+	if info.CompanyName != "" {
+		db = db.Where("`company_name` LIKE ?", "%"+info.CompanyName+"%")
+	}
+
 	err = db.Count(&total).Error
 	if err != nil {
 		return
 	}
-	err = db.Limit(limit).Offset(offset).Find(&departList).Error
+	err = db.Order("id desc").Limit(limit).Offset(offset).Find(&departList).Error
 	return err, departList, total
 }
 
@@ -56,6 +64,7 @@ func (departService *DepartService) UpdateDepart(depart *system.SysDepart) (err 
 		"CompanyName":  depart.CompanyName,
 		"CompanyEmail": depart.CompanyEmail,
 		"Type":         depart.Type,
+		"UpdateTime":   time.Now().Unix(),
 	}
 
 	db := global.GVA_DB.Where("id = ?", depart.ID).First(&sysDepart)

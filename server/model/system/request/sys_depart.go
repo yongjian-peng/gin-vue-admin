@@ -1,6 +1,10 @@
 package request
 
-import model "github.com/flipped-aurora/gin-vue-admin/server/model/system"
+import (
+	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
+	// model "github.com/flipped-aurora/gin-vue-admin/server/model/system"
+)
 
 // User register structure
 // type Register struct {
@@ -32,18 +36,19 @@ import model "github.com/flipped-aurora/gin-vue-admin/server/model/system"
 // 	AuthorityId string `json:"authorityId"` // 角色ID
 // }
 
-// Modify  user's auth structure
-// type SetUserAuthorities struct {
-// 	ID           uint
-// 	AuthorityIds []string `json:"authorityIds"` // 角色ID
-// }
-
-type ChangeDepartInfo struct {
-	ID           uint                 `gorm:"primarykey"`                                                                           // 主键ID
-	NickName     string               `json:"nickName" gorm:"default:系统用户;comment:用户昵称"`                                            // 用户昵称
-	Phone        string               `json:"phone"  gorm:"comment:用户手机号"`                                                          // 用户角色ID
-	AuthorityIds []string             `json:"authorityIds" gorm:"-"`                                                                // 角色ID
-	Email        string               `json:"email"  gorm:"comment:用户邮箱"`                                                           // 用户邮箱
-	HeaderImg    string               `json:"headerImg" gorm:"default:https://qmplusimg.henrongyi.top/gva_header.jpg;comment:用户头像"` // 用户头像
-	Authorities  []model.SysAuthority `json:"-" gorm:"many2many:sys_user_authority;"`
+// api分页条件查询及排序结构体
+type SearchDepartParams struct {
+	system.SysDepart
+	request.PageInfo
+	Desc bool `json:"desc"` // 排序方式:升序false(默认)|降序true
 }
+
+// type ChangeDepartInfo struct {
+// 	ID           uint                 `gorm:"primarykey"`                                                                           // 主键ID
+// 	NickName     string               `json:"nickName" gorm:"default:系统用户;comment:用户昵称"`                                            // 用户昵称
+// 	Phone        string               `json:"phone"  gorm:"comment:用户手机号"`                                                          // 用户角色ID
+// 	AuthorityIds []string             `json:"authorityIds" gorm:"-"`                                                                // 角色ID
+// 	Email        string               `json:"email"  gorm:"comment:用户邮箱"`                                                           // 用户邮箱
+// 	HeaderImg    string               `json:"headerImg" gorm:"default:https://qmplusimg.henrongyi.top/gva_header.jpg;comment:用户头像"` // 用户头像
+// 	Authorities  []model.SysAuthority `json:"-" gorm:"many2many:sys_user_authority;"`
+// }
