@@ -11,7 +11,13 @@
 
 这是从官方 github fork 过来的项目 请以官方为主 ：https://github.com/flipped-aurora/gin-vue-admin
 
-## 不同版本
+## 练习模块展示
+
+
+<div align=center>
+<img src="./static/Snipaste_gin_vue_admin_depart.png"  />
+</div>
+
 
 我们会对以下四个版本持续维护，请选择适合自己的版本使用。最新技术栈为组合式api版本，已支持多语言（I18N）
 
@@ -135,16 +141,16 @@ swag init
         ├── docs            (swagger文档目录)
         ├── global          (全局对象)  
         ├── initialize      (初始化)  
-        │   └── internal    (初始化内部函数)      
+        │   └── internal    (初始化内部函数)    
         ├── middleware      (中间件层)  
         ├── model           (模型层)  
         │   ├── request     (入参结构体)  
-        │   └── response    (出参结构体)      
+        │   └── response    (出参结构体)    
         ├── packfile        (静态文件打包)  
         ├── resource        (静态资源文件夹)  
         │   ├── excel       (excel导入导出默认路径)  
         │   ├── page        (表单生成器)  
-        │   └── template    (模板)      
+        │   └── template    (模板)    
         ├── router          (路由层)  
         ├── service         (service层)  
         ├── source          (source层)  
